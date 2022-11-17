@@ -21,4 +21,4 @@ cookie.onclick = () => {
         flag = true;
         
     }
-
+}
