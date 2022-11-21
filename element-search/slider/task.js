@@ -23,30 +23,32 @@ document.body.querySelector('.slider__arrow_next').onclick = next;
 dotsArray.forEach(dot => dot.onclick = specificSlide)
 
 function prev() {
-    slidesArray.current().className = 'slider__item';
-    dotsArray.current().className = 'slider__dot';
+    slidesArray.current().classList.remove('slider__item_active');
+    dotsArray.current().classList.remove('slider__dot_active');
 
-    slidesArray.prev().className = 'slider__item slider__item_active';
-    dotsArray.prev().className = 'slider__dot slider__dot_active';
+    slidesArray.prev().classList.add('slider__item_active');
+    dotsArray.prev().classList.add('slider__dot_active')
 }
 
 function next() {
-    slidesArray.current().className = 'slider__item';
-    dotsArray.current().className = 'slider__dot';
+    slidesArray.current().classList.remove('slider__item_active');
+    dotsArray.current().classList.remove('slider__dot_active');
 
-    slidesArray.next().className = 'slider__item_active';
-    dotsArray.next().className = 'slider__dot slider__dot_active';
+    slidesArray.next().classList.add('slider__item_active');
+    dotsArray.next().classList.add('slider__dot_active')
+
+    console.log(slidesArray.current().classList);
 }
 
 function specificSlide() {
     
     for(let i = 0; i < slidesArray.length; i++) {
 
-        slidesArray[i].className = 'slider__item';
-        dotsArray[i].className = 'slider__dot';
+        slidesArray[i].classList.remove('slider__item_active');
+        dotsArray[i].classList.remove('slider__dot_active');
         if(this === dotsArray[i]) {
-            slidesArray[i].className = 'slider__item slider__item_active';
-            dotsArray[i].className = 'slider__dot slider__dot_active';
+            slidesArray[i].classList.add('slider__item_active');
+            dotsArray[i].classList.add('slider__dot_active');
             slidesArray.counter = i;
             dotsArray.counter = i;
         }

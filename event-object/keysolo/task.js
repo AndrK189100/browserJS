@@ -5,8 +5,10 @@ class Game {
     this.winsElement = container.querySelector('.status__wins');
     this.lossElement = container.querySelector('.status__loss');
 
+    this.timer = container.querySelector('.status__timer');
+    
     this.reset();
-
+    this.intervalID = this.setTimer();
     this.registerEvents();
   }
 
@@ -16,6 +18,27 @@ class Game {
     this.lossElement.textContent = 0;
   }
 
+  setTimer() 
+  {
+    const z =this;
+    this.timer.textContent = '00:00:05';
+
+    return setInterval(() =>{
+      this.timer.textContent = getTime();
+      if(this.timer.textContent === '-1:-1:-1') {
+        this.fail();
+      }
+    }, 1000);
+    
+    function getTime() {
+      const tBuffer = z.timer.textContent.split(':');
+      let seconds = Number(tBuffer[0]) * 3600 + Number(tBuffer[1]) * 60 + Number(tBuffer[2]);
+      seconds -=1;
+      return ('0' + Math.floor(seconds / 3600)).slice(-2) + ':' + ('0' + Math.floor((seconds % 3600 / 60))).slice(-2) + 
+                        ':' + ('0' + Math.floor((seconds % 3600)) % 60).slice(-2);
+      }
+  }
+  
   registerEvents() {
     /*
       TODO:
@@ -24,6 +47,18 @@ class Game {
       В случае правильного ввода слова вызываем this.success()
       При неправильном вводе символа - this.fail();
      */
+    
+      document.addEventListener('keypress', keyDown);
+      const z = this;
+      
+      function keyDown(event){
+        if(event.key.toLowerCase() === z.currentSymbol.textContent.toLowerCase()){
+          z.success();
+        }
+        else {z.fail()}
+
+      }
+
   }
 
   success() {
@@ -38,14 +73,23 @@ class Game {
       this.reset();
     }
     this.setNewWord();
+    clearInterval(this.intervalID);
+    this.intervalID = this.setTimer();
+    
+    
   }
 
   fail() {
+    
     if (++this.lossElement.textContent === 5) {
       alert('Вы проиграли!');
       this.reset();
+
+      
     }
     this.setNewWord();
+    clearInterval(this.intervalID);
+    this.intervalID = this.setTimer();
   }
 
   setNewWord() {
