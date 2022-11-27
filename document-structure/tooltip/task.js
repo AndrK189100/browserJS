@@ -1,7 +1,6 @@
 const toolitps = Array.from(document.body.querySelectorAll('.has-tooltip'));
 
 toolitps.forEach(element => {
-    const coordinates = element.getBoundingClientRect();
     element.insertAdjacentHTML('afterend',`<div class="tooltip" style="left: 0; top: 0">${element.title}</div>`)
 })
 
@@ -35,8 +34,7 @@ function getToolTip(env) {
         this.nextSibling.style['top'] = coordinates.top + 'px';
 
     }
-    
-    
+       
     env.preventDefault();
 }
 
