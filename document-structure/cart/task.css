@@ -10,10 +10,12 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  
 }
 
 .cart__product {
   position: relative;
+  visibility: hidden;
 }
 .cart__product-count {
   position: absolute;
@@ -102,5 +104,9 @@ body {
 }
 
 .product-shadow {
+  position: absolute;
+}
+
+.product-move {
   position: absolute;
 }
