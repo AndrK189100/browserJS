@@ -47,15 +47,11 @@ function taskAdd(env) {
         const  taskList = document.body.querySelector('#tasks__list');
         taskList.appendChild(task);
         input.value = '';
+        
+        myStorage.setItem(task.dataset.task_id, task.innerHTML);
+        task.addEventListener('click', taskRemove);
    }
-
-   myStorage.setItem(task.dataset.task_id, task.innerHTML);
-   
-   task.addEventListener('click', taskRemove);
-
-   env.preventDefault();
 }
-
 
 function taskRemove(env) {
   const  taskList = document.body.querySelector('#tasks__list');
@@ -64,7 +60,6 @@ function taskRemove(env) {
   taskList.removeChild(task);
   myStorage.removeItem(task.dataset.task_id); 
 }
-
 
 init();
 document.body.querySelector('#tasks__add').addEventListener('click', taskAdd);
