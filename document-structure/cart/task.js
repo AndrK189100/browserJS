@@ -26,51 +26,43 @@ function productDec(env) {
 function productAdd(env) {
 
     const cart = document.body.querySelector('.cart__products');
-    let isCart = false;
-    
     const product = this.closest('.product');
-    const product_id = product.dataset.id;
     const product_quantity = product.querySelector('.product__quantity-value').textContent;
     const product_image = product.querySelector('.product__image').src;
 
-    Array.from(cart.querySelectorAll('.cart__product')).forEach( cartProduct => {
-        if (cartProduct.dataset.id === product_id) {
-            productMove(product, product_image, cartProduct);
-            cartProduct.querySelector('.cart__product-count').textContent = 
-                Number(cartProduct.querySelector('.cart__product-count').textContent) + Number(product_quantity);
-            isCart = true;    
-        } 
-
-    })
-
-    if(isCart) return;
+    let productInCart = Array.from(cart.querySelectorAll('.cart__product')).find(item => item.dataset.id === product.dataset.id);
     
+    if (productInCart) {
+        productMove(product, product_image, productInCart);
+        productInCart.querySelector('.cart__product-count').textContent = 
+                Number(productInCart.querySelector('.cart__product-count').textContent) + Number(product_quantity);
+    }
+    else {
+            
+    productInCart = document.createElement('div');
+    productInCart.classList.add('cart__product');
+    productInCart.setAttribute('data-id', product.dataset.id);
     
-    const cartProduct = document.createElement('div');
-    cartProduct.classList.add('cart__product');
-    cartProduct.setAttribute('data-id', product_id);
-    
-    cartProduct.innerHTML = `<img class="cart__product-image" src=${product_image}>
+    productInCart.innerHTML = `<img class="cart__product-image" src=${product_image}>
                       <div class="cart__product-count">${product_quantity}</div>
                       <div class="cart__product-delete">X</div>`;
     
-    cartProduct.querySelector('.cart__product-delete').addEventListener('click', productRemove);                  
+    productInCart.querySelector('.cart__product-delete').addEventListener('click', productRemove);                  
 
-    cart.append(cartProduct);
+    cart.append(productInCart);
 
     document.body.querySelector('.cart').style['display'] = 'block';
 
-    productMove(product, product_image, cartProduct);
-
+    productMove(product, product_image, productInCart);}
 }
 
-function productMove(product, product_image, cartProduct) {
+function productMove(product, product_image, productInCart) {
     
     const coordinateProduct = product.querySelector('.product__image').getBoundingClientRect();
-    const coordinateCartProduct = cartProduct.getBoundingClientRect();
+    const coordinateproductInCart = productInCart.getBoundingClientRect();
 
-    const yWay = coordinateProduct.top -coordinateCartProduct.top;
-    const xWay = coordinateCartProduct.left;
+    const yWay = coordinateProduct.top -coordinateproductInCart.top;
+    const xWay = coordinateproductInCart.left;
     const yStep = yWay / 20;
     const xStep = xWay / 20;
 
@@ -85,24 +77,22 @@ function productMove(product, product_image, cartProduct) {
 
     document.body.appendChild(img);
     
-    const timer = ms => new Promise(res => setTimeout(res, ms))
+    const timer = ms => new Promise(res => setTimeout(res, ms));
     
-    async function f() {
-    for(let i = 0; i < 20; i++) {
-    
-        imgY -= yStep;
-        imgX +=xStep;
+    (async () => {
+        for(let i = 0; i < 20; i++) {
+        
+            imgY -= yStep;
+            imgX +=xStep;
 
-        img.style['top'] = imgY + 'px';
-        img.style['left'] = imgX + 'px';
-        await timer(1);
-    }
-    
-    img.style['display'] = 'none';
-    cartProduct.style['visibility'] = 'visible';
-    }
-    
-    f();
+            img.style['top'] = imgY + 'px';
+            img.style['left'] = imgX + 'px';
+            await timer(1);
+        }
+        
+        img.style['display'] = 'none';
+        productInCart.style['visibility'] = 'visible';
+    })();
 }
 
 function productRemove(env) {

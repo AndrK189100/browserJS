@@ -1,31 +1,23 @@
 const myStorage = window.localStorage;
+let todo = [];
 let taskCount = 0;
 
 function init() {
     const  taskList = document.body.querySelector('#tasks__list');
-    let key;
-    const arrayTasks = [];
-
-    for (let i = 0; i < myStorage.length; i++) {
-        let key = myStorage.key(i);
-        let textHTML = myStorage.getItem(key);
-        arrayTasks.push({[key]: textHTML});
+    if(myStorage.getItem('todo_homework')) {
+        todo = JSON.parse(myStorage.getItem('todo_homework'));
     }
-
-    arrayTasks.sort((x, y) => {return Number(Object.keys(x)[0]) -  Number(Object.keys(y)[0])});
-
-
-    arrayTasks.forEach( item => {
-        let key = Object.keys(item)[0];
-        let taskHTML = myStorage.getItem(key);
+    
+    todo.forEach( item => {
+        itemObject = JSON.parse(item);
         const task = document.createElement('div');
         task.classList.add('task');
-        task.setAttribute('data-task_id', key);
-        task.innerHTML = taskHTML;
+        task.setAttribute('data-task_id', itemObject.id);
+        task.innerHTML = itemObject.task;
         taskList.appendChild(task);
         task.addEventListener('click', taskRemove);
-        if(Number(key) > taskCount) {
-            taskCount = Number(key);
+        if(Number(itemObject.id) > taskCount) {
+            taskCount = Number(itemObject.id);
         }
 
 
@@ -40,25 +32,28 @@ function taskAdd(env) {
        
    const input = document.body.querySelector('#task__input');
    
-   if (input.value) {
+   if (input.value.trim()) {
         task.innerHTML = ` <div class="task__title">${input.value}</div>
         <a href="#" class="task__remove">&times;</a>`
 
         const  taskList = document.body.querySelector('#tasks__list');
         taskList.appendChild(task);
         input.value = '';
-        
-        myStorage.setItem(task.dataset.task_id, task.innerHTML);
+        todo.push(JSON.stringify({id: task.dataset.task_id, task: task.innerHTML}))
+        myStorage.setItem('todo_homework', JSON.stringify(todo));
         task.addEventListener('click', taskRemove);
    }
+   else {input.value = ''}
+   env.preventDefault();
 }
+
 
 function taskRemove(env) {
   const  taskList = document.body.querySelector('#tasks__list');
   task = this.closest('.task');
-
+  todo.splice(todo.indexOf(JSON.stringify({id: task.dataset.task_id, task: task.innerHTML})),1) 
   taskList.removeChild(task);
-  myStorage.removeItem(task.dataset.task_id); 
+  myStorage.setItem('todo_homework', JSON.stringify(todo)); 
 }
 
 init();

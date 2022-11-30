@@ -6,7 +6,9 @@ toolitps.forEach(element => {
 
 function getToolTip(env) {
     Array.from(document.body.querySelectorAll('.tooltip')).forEach(tooltip => {
-        tooltip.classList.remove('tooltip_active')
+        if (tooltip !== this.nextSibling) {
+            tooltip.classList.remove('tooltip_active')
+        }
     })
     const coordinates = this.getBoundingClientRect();
 
@@ -16,20 +18,20 @@ function getToolTip(env) {
     if(!this.dataset.position || this.dataset.position === 'bottom') {
         this.nextSibling.style['left'] = coordinates.left + 'px';
         this.nextSibling.style['top'] = coordinates.bottom + 'px';
-        this.nextSibling.classList.add('tooltip_active');
+        this.nextSibling.classList.toggle('tooltip_active');
     }
     else if (this.dataset.position === 'top') {
-        this.nextSibling.classList.add('tooltip_active');
+        this.nextSibling.classList.toggle('tooltip_active');
         this.nextSibling.style['top'] = coordinates.top - this.nextSibling.getBoundingClientRect().height + 'px';
         this.nextSibling.style['left'] = coordinates.left + 'px';
     }
     else if (this.dataset.position === 'left') {
-        this.nextSibling.classList.add('tooltip_active');
+        this.nextSibling.classList.toggle('tooltip_active');
         this.nextSibling.style['left'] = coordinates.left - this.nextSibling.getBoundingClientRect().right + 'px';
         this.nextSibling.style['top'] = coordinates.top + 'px';
     }
     else {
-        this.nextSibling.classList.add('tooltip_active');
+        this.nextSibling.classList.toggle('tooltip_active');
         this.nextSibling.style['left'] = coordinates.right + 'px';
         this.nextSibling.style['top'] = coordinates.top + 'px';
 
