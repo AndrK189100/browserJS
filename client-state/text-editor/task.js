@@ -1,26 +1,16 @@
 const myStorage = window.localStorage;
 
-document.getElementById('btn');
-
-let text = myStorage['text'];
-if (!text) text = '';
-
-
 const editor = document.getElementById('editor');
-editor.value = text;
-editor.addEventListener('keypress', safeText);
+editor.value = myStorage.getItem('text')
+editor.addEventListener('input', safeText);
 
 function safeText(env) {
-    if(env.key === 'Enter') {text += '\n'}
-    else{text += env.key};
-
-    myStorage.setItem('text', text);
+    myStorage.setItem('text', editor.value);
 }
 
 document.getElementById('btn').addEventListener('click', clearText);
 
 function clearText(env) {
     myStorage.removeItem('text');
-    text = '';
-    editor.value = text;
+    editor.value = '';
 }
